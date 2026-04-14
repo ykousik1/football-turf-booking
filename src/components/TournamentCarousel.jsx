@@ -148,7 +148,7 @@ export default function TournamentCarousel() {
                 </div>
                 {isCenter && (
                   <a
-                    href={`https://wa.me/919999999999?text=${encodeURIComponent(`Hi TurfKhelo, I want to join ${t.name} on ${t.date}`)}`}
+                    href={`https://wa.me/916303480824?text=${encodeURIComponent(`Hi TurfKhelo, I want to join ${t.name} on ${t.date}`)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="mt-4 inline-flex w-full items-center justify-center rounded-3xl bg-green-500 px-4 py-2 text-sm font-semibold text-black transition hover:bg-green-400"

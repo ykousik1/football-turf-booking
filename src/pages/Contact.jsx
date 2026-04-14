@@ -22,7 +22,7 @@
           <div className="rounded-[2rem] border border-white/10 bg-slate-950/90 p-8 shadow-2xl">
             <h2 className="text-xl font-semibold text-white">WhatsApp</h2>
             <a
-              href="https://wa.me/919999999999?text=Hi%20TurfKhelo%20team,%20I%20need%20help%20with%20a%20booking"
+              href="https://wa.me/916303480824?text=Hi%20TurfKhelo%20team,%20I%20need%20help%20with%20a%20booking"
               target="_blank"
               rel="noreferrer"
               className="mt-4 inline-flex rounded-full bg-green-500 px-6 py-3 text-sm font-semibold text-black transition hover:bg-green-400"
