@@ -209,16 +209,16 @@ export default function IntroAnimation({ onFinish }) {
   const finishedRef = useRef(false);
 
   useEffect(() => {
-    // Check if user has seen intro before (localStorage)
-    const hasSeenIntro = localStorage.getItem("intro_seen");
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Check if user has seen intro before (localStorage) - only skip on RETURN visits
+    const hasSeenIntro = localStorage.getItem("intro_seen_v2");
     if (hasSeenIntro) {
       finishedRef.current = true;
       onFinish();
       return;
     }
-
-    const container = containerRef.current;
-    if (!container) return;
 
     // SCENE SETUP
     const scene = new THREE.Scene();
@@ -523,7 +523,7 @@ export default function IntroAnimation({ onFinish }) {
         // Trigger finish at goal moment
         if (finishedRef.current) return;
         finishedRef.current = true;
-        localStorage.setItem("intro_seen", "true");
+        localStorage.setItem("intro_seen_v2", "true");
         setFade(true);
         setTimeout(() => {
           onFinish();
@@ -558,7 +558,7 @@ export default function IntroAnimation({ onFinish }) {
   const handleSkip = () => {
     if (finishedRef.current) return;
     finishedRef.current = true;
-    localStorage.setItem("intro_seen", "true");
+    localStorage.setItem("intro_seen_v2", "true");
     setFade(true);
     setTimeout(() => {
       onFinish();
