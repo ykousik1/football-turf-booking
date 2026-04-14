@@ -1,140 +1,154 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-// Create a Neymar-inspired player character with jersey, shorts, and boots
-const createNeymarInspiredPlayer = () => {
+// Create a sophisticated pro footballer model
+const createProFootballer = () => {
   const player = new THREE.Group();
 
-  // Jersey (green kit inspired by Neymar's style)
+  // Body materials
   const jerseyMaterial = new THREE.MeshStandardMaterial({
     color: 0x1f8d2c,
     roughness: 0.35,
     metalness: 0.08,
+    emissive: 0x0a3d15,
   });
 
-  const torso = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.82, 0.28), jerseyMaterial);
-  torso.castShadow = true;
-  torso.receiveShadow = true;
-  torso.position.y = 1.08;
-  player.add(torso);
-
-  // Jersey number "10" (simple canvas texture)
-  const numberCanvas = document.createElement("canvas");
-  numberCanvas.width = 64;
-  numberCanvas.height = 64;
-  const ctx = numberCanvas.getContext("2d");
-  ctx.fillStyle = "#1f8d2c";
-  ctx.fillRect(0, 0, 64, 64);
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 48px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("10", 32, 32);
-
-  const texture = new THREE.CanvasTexture(numberCanvas);
-  const numberGeometry = new THREE.PlaneGeometry(0.14, 0.16);
-  const numberMesh = new THREE.Mesh(numberGeometry, new THREE.MeshStandardMaterial({ map: texture }));
-  numberMesh.position.z = 0.15;
-  torso.add(numberMesh);
-
-  // Head (light skin tone)
   const skinMaterial = new THREE.MeshStandardMaterial({
     color: 0xf5d5b8,
     roughness: 0.4,
     metalness: 0.02,
   });
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 20, 20), skinMaterial);
-  head.position.set(0, 1.78, 0);
+
+  const bootMaterial = new THREE.MeshStandardMaterial({
+    color: 0x0a0a0a,
+    roughness: 0.3,
+    metalness: 0.25,
+  });
+
+  // Head
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.26, 20, 20), skinMaterial);
+  head.position.y = 1.8;
   head.castShadow = true;
   head.receiveShadow = true;
   player.add(head);
 
-  // Hair (dark, stylish)
-  const hairMaterial = new THREE.MeshStandardMaterial({
-    color: 0x1a1a1a,
-    roughness: 0.5,
-  });
-  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.3, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), hairMaterial);
-  hair.position.set(0, 1.95, 0);
-  hair.scale.set(1, 0.65, 1);
+  // Hair (dark, voluminous)
+  const hair = new THREE.Mesh(
+    new THREE.SphereGeometry(0.28, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.65),
+    new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.55 })
+  );
+  hair.position.y = 2.0;
+  hair.scale.set(1.05, 0.7, 1.05);
   hair.castShadow = true;
   player.add(hair);
 
-  // Arms
-  const armMaterial = skinMaterial.clone();
-  const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.75, 12), armMaterial);
-  leftArm.position.set(-0.5, 1.3, 0);
-  leftArm.rotation.z = -0.35;
-  leftArm.castShadow = true;
-  leftArm.receiveShadow = true;
-  player.add(leftArm);
+  // Torso/Jersey
+  const torso = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.68, 0.24), jerseyMaterial);
+  torso.position.y = 1.12;
+  torso.castShadow = true;
+  torso.receiveShadow = true;
+  player.add(torso);
 
-  const rightArm = leftArm.clone();
-  rightArm.position.set(0.5, 1.3, 0);
-  rightArm.rotation.z = 0.35;
-  player.add(rightArm);
+  // Jersey number "10" text
+  const canvas = document.createElement("canvas");
+  canvas.width = 128;
+  canvas.height = 128;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#1f8d2c";
+  ctx.fillRect(0, 0, 128, 128);
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 110px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("10", 64, 64);
+  const texture = new THREE.CanvasTexture(canvas);
+  const numberMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.16, 0.18),
+    new THREE.MeshStandardMaterial({ map: texture })
+  );
+  numberMesh.position.z = 0.13;
+  torso.add(numberMesh);
 
-  // Shorts (dark)
-  const shortsMaterial = new THREE.MeshStandardMaterial({
-    color: 0x0d1f15,
-    roughness: 0.45,
-  });
-  const shorts = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.35, 0.3), shortsMaterial);
-  shorts.position.y = 0.75;
+  // Shorts
+  const shorts = new THREE.Mesh(
+    new THREE.BoxGeometry(0.4, 0.32, 0.25),
+    new THREE.MeshStandardMaterial({ color: 0x0d1f15, roughness: 0.45 })
+  );
+  shorts.position.y = 0.78;
   shorts.castShadow = true;
   shorts.receiveShadow = true;
   player.add(shorts);
 
+  // Arms
+  const leftUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.36, 10), skinMaterial);
+  leftUpperArm.position.set(-0.52, 1.38, 0);
+  leftUpperArm.castShadow = true;
+  player.add(leftUpperArm);
+
+  const leftForeArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.38, 10), skinMaterial);
+  leftForeArm.position.set(-0.52, 1.0, 0);
+  leftForeArm.castShadow = true;
+  player.add(leftForeArm);
+
+  const rightUpperArm = leftUpperArm.clone();
+  rightUpperArm.position.x = 0.52;
+  player.add(rightUpperArm);
+
+  const rightForeArm = leftForeArm.clone();
+  rightForeArm.position.x = 0.52;
+  player.add(rightForeArm);
+
   // Legs
-  const legMaterial = skinMaterial.clone();
-  const leftLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.85, 12), legMaterial);
-  leftLeg.position.set(-0.15, 0.15, 0);
-  leftLeg.castShadow = true;
-  leftLeg.receiveShadow = true;
-  player.add(leftLeg);
+  const leftThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.1, 0.48, 10), skinMaterial);
+  leftThigh.position.set(-0.16, 0.52, 0);
+  leftThigh.castShadow = true;
+  player.add(leftThigh);
 
-  const rightLeg = leftLeg.clone();
-  rightLeg.position.set(0.15, 0.15, 0);
-  player.add(rightLeg);
+  const leftShin = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.5, 10), skinMaterial);
+  leftShin.position.set(-0.16, -0.06, 0);
+  leftShin.castShadow = true;
+  player.add(leftShin);
 
-  // Boots (premium look)
-  const bootMaterial = new THREE.MeshStandardMaterial({
-    color: 0x0a0a0a,
-    roughness: 0.3,
-    metalness: 0.15,
-  });
-  const bootGeometry = new THREE.BoxGeometry(0.2, 0.14, 0.42);
-  const leftBoot = new THREE.Mesh(bootGeometry, bootMaterial);
-  leftBoot.position.set(-0.15, -0.27, 0.1);
+  const leftBoot = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.13, 0.36), bootMaterial);
+  leftBoot.position.set(-0.16, -0.37, 0.08);
   leftBoot.castShadow = true;
-  leftBoot.receiveShadow = true;
   player.add(leftBoot);
 
+  const rightThigh = leftThigh.clone();
+  rightThigh.position.x = 0.16;
+  player.add(rightThigh);
+
+  const rightShin = leftShin.clone();
+  rightShin.position.x = 0.16;
+  player.add(rightShin);
+
   const rightBoot = leftBoot.clone();
-  rightBoot.position.set(0.15, -0.27, 0.1);
+  rightBoot.position.x = 0.16;
   player.add(rightBoot);
 
-  // Soccer socks (white stripe)
-  const sockMaterial = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    roughness: 0.6,
-  });
-  const sock = new THREE.Mesh(new THREE.CylinderGeometry(0.125, 0.125, 0.18, 10), sockMaterial);
-  sock.position.set(-0.15, -0.05, 0);
-  sock.castShadow = true;
-  player.add(sock);
+  // Socks
+  const sockL = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.11, 0.11, 0.16, 8),
+    new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 })
+  );
+  sockL.position.set(-0.16, 0.08, 0);
+  player.add(sockL);
 
-  const rightSock = sock.clone();
-  rightSock.position.set(0.15, -0.05, 0);
-  player.add(rightSock);
+  const sockR = sockL.clone();
+  sockR.position.x = 0.16;
+  player.add(sockR);
 
+  // Return with references to animatable parts
   player.userData = {
-    torso,
     head,
-    leftArm,
-    rightArm,
-    leftLeg,
-    rightLeg,
+    leftUpperArm,
+    leftForeArm,
+    rightUpperArm,
+    rightForeArm,
+    leftThigh,
+    rightThigh,
+    leftShin,
+    rightShin,
     leftBoot,
     rightBoot,
   };
@@ -142,29 +156,83 @@ const createNeymarInspiredPlayer = () => {
   return player;
 };
 
+// Create deformable goal net
+const createGoalNet = () => {
+  const netGroup = new THREE.Group();
+  const netMaterial = new THREE.LineBasicMaterial({
+    color: 0xf0f0f0,
+    transparent: true,
+    opacity: 0.5,
+    linewidth: 1,
+  });
+
+  const netNodes = [];
+
+  // Create grid of net nodes for deformation
+  for (let i = -6; i <= 6; i++) {
+    for (let j = 0; j < 3; j++) {
+      const node = new THREE.Vector3(0, 0.2 + i * 0.32, -0.95 + j * 1.0);
+      netNodes.push(node);
+    }
+  }
+
+  // Connect nodes with lines
+  for (let i = -6; i < 6; i++) {
+    for (let j = 0; j < 3; j++) {
+      const idx1 = (i + 6) * 3 + j;
+      const idx2 = (i + 7) * 3 + j;
+
+      if (idx2 < netNodes.length) {
+        const geom = new THREE.BufferGeometry().setFromPoints([netNodes[idx1], netNodes[idx2]]);
+        netGroup.add(new THREE.Line(geom, netMaterial));
+      }
+
+      const idx3 = (i + 6) * 3 + j;
+      const idx4 = (i + 6) * 3 + (j + 1);
+
+      if (idx4 < netNodes.length && j < 2) {
+        const geom = new THREE.BufferGeometry().setFromPoints([netNodes[idx3], netNodes[idx4]]);
+        netGroup.add(new THREE.Line(geom, netMaterial));
+      }
+    }
+  }
+
+  netGroup.userData.nodes = netNodes;
+  return netGroup;
+};
+
 export default function IntroAnimation({ onFinish }) {
   const containerRef = useRef(null);
   const [loaded, setLoaded] = useState(false);
   const [fade, setFade] = useState(false);
+  const [skipAnimation, setSkipAnimation] = useState(false);
   const finishedRef = useRef(false);
 
   useEffect(() => {
+    // Check if user has seen intro before (localStorage)
+    const hasSeenIntro = localStorage.getItem("intro_seen");
+    if (hasSeenIntro) {
+      finishedRef.current = true;
+      onFinish();
+      return;
+    }
+
     const container = containerRef.current;
     if (!container) return;
 
-    // Scene setup
+    // SCENE SETUP
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x020613);
-    scene.fog = new THREE.Fog(0x020613, 10, 28);
+    scene.background = new THREE.Color(0x0a0f1a);
+    scene.fog = new THREE.Fog(0x0a0f1a, 12, 35);
 
     const camera = new THREE.PerspectiveCamera(
-      38,
+      42,
       container.clientWidth / container.clientHeight,
       0.1,
-      150
+      200
     );
-    camera.position.set(-4, 2.8, 8.2);
-    camera.lookAt(0.3, 1.0, 0);
+    camera.position.set(-5.2, 3.2, 9.8);
+    camera.lookAt(0, 1.2, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
@@ -172,8 +240,299 @@ export default function IntroAnimation({ onFinish }) {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.95;
+    renderer.toneMappingExposure = 1.0;
     container.appendChild(renderer.domElement);
+
+    // LIGHTING - Stadium night scene
+    const ambientLight = new THREE.AmbientLight(0x6b8ac6, 0.5);
+    scene.add(ambientLight);
+
+    const mainLight = new THREE.DirectionalLight(0xfffacd, 1.4);
+    mainLight.position.set(-6, 14, 8);
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.set(2048, 2048);
+    mainLight.shadow.camera.far = 30;
+    mainLight.shadow.camera.left = -20;
+    mainLight.shadow.camera.right = 20;
+    mainLight.shadow.camera.top = 20;
+    mainLight.shadow.camera.bottom = -10;
+    mainLight.shadow.bias = -0.0008;
+    scene.add(mainLight);
+
+    // Fill light
+    const fillLight = new THREE.DirectionalLight(0x4a8fb8, 0.35);
+    fillLight.position.set(8, 7, -6);
+    scene.add(fillLight);
+
+    // ENVIRONMENT
+    const groundMaterial = new THREE.MeshStandardMaterial({
+      color: 0x0b5a1f,
+      roughness: 0.82,
+      metalness: 0.01,
+    });
+
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(80, 50), groundMaterial);
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    // Stadium structure
+    const stadiumMaterial = new THREE.MeshStandardMaterial({
+      color: 0x0d1220,
+      roughness: 0.92,
+      metalness: 0.03,
+    });
+
+    const backStand = new THREE.Mesh(new THREE.BoxGeometry(60, 12, 3), stadiumMaterial);
+    backStand.position.set(0, 6, -18);
+    backStand.receiveShadow = true;
+    scene.add(backStand);
+
+    // Goals
+    const goalPostMaterial = new THREE.MeshStandardMaterial({
+      color: 0xfaf8f3,
+      roughness: 0.12,
+      metalness: 0.5,
+    });
+
+    const leftPost = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 2.44, 10), goalPostMaterial);
+    leftPost.position.set(5.0, 1.22, -0.95);
+    leftPost.castShadow = true;
+    leftPost.receiveShadow = true;
+    scene.add(leftPost);
+
+    const rightPost = leftPost.clone();
+    rightPost.position.z = 0.95;
+    scene.add(rightPost);
+
+    const crossbar = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.2, 10), goalPostMaterial);
+    crossbar.rotation.z = Math.PI / 2;
+    crossbar.position.set(5.0, 2.44, 0);
+    crossbar.castShadow = true;
+    scene.add(crossbar);
+
+    // GOAL NET
+    const goalNet = createGoalNet();
+    scene.add(goalNet);
+
+    // PLAYER
+    const player = createProFootballer();
+    player.position.set(-3.5, 0, 0.95);
+    scene.add(player);
+
+    // BALL
+    const ballMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      roughness: 0.2,
+      metalness: 0.18,
+    });
+
+    const ball = new THREE.Mesh(new THREE.IcosahedronGeometry(0.36, 5), ballMaterial);
+    ball.castShadow = true;
+    ball.receiveShadow = true;
+    scene.add(ball);
+
+    // Ball initial position (incoming pass)
+    ball.position.set(-2.8, 1.9, 0.9);
+    const ballVelocity = new THREE.Vector3(0, -0.8, -0.12);
+
+    // FIELD MARKINGS
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.2,
+    });
+
+    const centerLine = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-15, 0.02, 0),
+      new THREE.Vector3(15, 0.02, 0),
+    ]);
+    scene.add(new THREE.Line(centerLine, lineMaterial));
+
+    const penaltyLine = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(4.5, 0.02, -4),
+      new THREE.Vector3(4.5, 0.02, 4),
+    ]);
+    scene.add(new THREE.Line(penaltyLine, lineMaterial));
+
+    // ANIMATION STATE
+    const clock = new THREE.Clock();
+    let shouldStop = false;
+    let nextPhase = 0;
+    let animationTime = 0;
+
+    const totalDuration = 5.2; // 5.2 second sequence
+
+    // Animation phases
+    const phases = [
+      { start: 0.0, end: 1.2, name: "pass_incoming" },
+      { start: 1.2, end: 2.0, name: "chest_control" },
+      { start: 2.0, end: 2.8, name: "preparation" },
+      { start: 2.8, end: 3.6, name: "volley_jump" },
+      { start: 3.6, end: 4.2, name: "ball_flight" },
+      { start: 4.2, end: 5.2, name: "goal_impact" },
+    ];
+
+    // Get current phase
+    const getCurrentPhase = (t) => {
+      return phases.find((p) => t >= p.start && t < p.end);
+    };
+
+    // Animate pass incoming
+    const animatePassIncoming = (t, phase) => {
+      const localT = (t - phase.start) / (phase.end - phase.start);
+      ball.position.x = -2.8 + localT * 0.5;
+      ball.position.y = 1.9 - localT * 1.35;
+      ball.position.z = 0.9 - localT * 0.1;
+      ball.rotation.x += localT * 0.3;
+      ball.rotation.z += localT * 0.2;
+
+      // Player prepares to receive
+      player.userData.head.rotation.y = Math.sin(localT * Math.PI) * 0.3;
+      player.userData.leftUpperArm.rotation.x = -0.4 + Math.sin(localT * Math.PI) * 0.2;
+      player.userData.rightUpperArm.rotation.x = -0.4 - Math.sin(localT * Math.PI) * 0.15;
+    };
+
+    // Animate chest control
+    const animateChestControl = (t, phase) => {
+      const localT = (t - phase.start) / (phase.end - phase.start);
+
+      // Ball on chest
+      ball.position.x = -2.3;
+      ball.position.y = 1.2 + Math.sin(localT * Math.PI * 2) * 0.08;
+      ball.position.z = 0.8;
+
+      // Player chest control animation
+      player.userData.head.rotation.y = 0.3 - localT * 0.2;
+      player.userData.leftUpperArm.rotation.x = -0.5;
+      player.userData.rightUpperArm.rotation.x = -0.5;
+      player.rotation.x = Math.sin(localT * Math.PI) * 0.15;
+    };
+
+    // Animate preparation (touch and settle)
+    const animatePreparation = (t, phase) => {
+      const localT = (t - phase.start) / (phase.end - phase.start);
+
+      ball.position.x = -2.2 + localT * 0.3;
+      ball.position.y = 0.9 + Math.sin(localT * Math.PI) * 0.15;
+      ball.position.z = 0.75;
+
+      // Body angle for volley
+      player.rotation.x = 0.15 - localT * 0.1;
+      player.userData.leftForeArm.rotation.x = -0.6 + localT * 0.3;
+      player.userData.rightForeArm.rotation.x = -0.6 + localT * 0.3;
+    };
+
+    // Animate volley jump and kick
+    const animateVolleyKick = (t, phase) => {
+      const localT = (t - phase.start) / (phase.end - phase.start);
+
+      // Jump effect
+      player.position.y = Math.sin(localT * Math.PI) * 0.35;
+
+      // Kicking leg animation (right leg for volley)
+      player.userData.rightThigh.rotation.x = -1.2 * localT;
+      player.userData.rightShin.rotation.x = 0.8 * localT;
+
+      // Kicking motion builds up
+      const kickIntensity = Math.sin(localT * Math.PI);
+      ball.position.x = -1.9 + kickIntensity * 0.25;
+      ball.position.y = 0.75 + kickIntensity * 0.3;
+
+      // Upper body rotation during kick
+      player.rotation.y = -0.2 + kickIntensity * 0.15;
+    };
+
+    // Animate ball flight to goal
+    const animateBallFlight = (t, phase) => {
+      const localT = (t - phase.start) / (phase.end - phase.start);
+
+      // Parabolic trajectory
+      const flightCurve = Math.sin(localT * Math.PI) * 1.8;
+      ball.position.x = -1.65 + localT * 6.8;
+      ball.position.y = 1.05 + flightCurve;
+      ball.position.z = 0.7 - localT * 0.8;
+
+      // Ball spin
+      ball.rotation.x += localT * 0.5;
+      ball.rotation.z += localT * 0.35;
+
+      // Camera tracking
+      const camX = -4.5 + localT * 6.0;
+      const camY = 2.8 + localT * 0.6;
+      const camZ = 8.8 - localT * 2.5;
+      camera.position.lerp(new THREE.Vector3(camX, camY, camZ), 0.12);
+    };
+
+    // Animate goal impact and net deformation
+    const animateGoalImpact = (t, phase) => {
+      const localT = (t - phase.start) / (phase.end - phase.start);
+
+      ball.position.set(5.0, 1.2 - localT * 0.15, 0);
+
+      // Net deformation
+      const netNodes = goalNet.userData.nodes;
+      if (netNodes) {
+        netNodes.forEach((node, idx) => {
+          const distToCenter = Math.abs(node.z);
+          const impact = Math.max(0, 1 - (distToCenter * 2 + idx * 0.05));
+          const deform = Math.sin(localT * Math.PI * 3) * impact * 0.12;
+          node.x = deform;
+        });
+      }
+
+      // Camera setup for goal celebration
+      camera.position.lerp(new THREE.Vector3(4.0, 2.2, 5.5), 0.08);
+      camera.lookAt(5.0, 1.2, 0);
+    };
+
+    // Main animation loop
+    const animate = () => {
+      if (shouldStop) return;
+
+      const elapsed = clock.getElapsedTime();
+      const t = Math.min(elapsed, totalDuration);
+      const phase = getCurrentPhase(t);
+
+      if (phase) {
+        switch (phase.name) {
+          case "pass_incoming":
+            animatePassIncoming(t, phase);
+            break;
+          case "chest_control":
+            animateChestControl(t, phase);
+            break;
+          case "preparation":
+            animatePreparation(t, phase);
+            break;
+          case "volley_jump":
+            animateVolleyKick(t, phase);
+            break;
+          case "ball_flight":
+            animateBallFlight(t, phase);
+            break;
+          case "goal_impact":
+            animateGoalImpact(t, phase);
+            break;
+        }
+      }
+
+      renderer.render(scene, camera);
+
+      if (t >= totalDuration - 0.1) {
+        // Trigger finish at goal moment
+        if (finishedRef.current) return;
+        finishedRef.current = true;
+        localStorage.setItem("intro_seen", "true");
+        setFade(true);
+        setTimeout(() => {
+          onFinish();
+        }, 800);
+        return;
+      }
+
+      requestAnimationFrame(animate);
+    };
 
     const handleResize = () => {
       if (!container) return;
@@ -183,311 +542,6 @@ export default function IntroAnimation({ onFinish }) {
     };
 
     window.addEventListener("resize", handleResize);
-
-    // Lighting setup with stadium atmosphere
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
-    scene.add(ambientLight);
-
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.35);
-    mainLight.position.set(-5, 12, 7);
-    mainLight.castShadow = true;
-    mainLight.shadow.mapSize.set(2048, 2048);
-    mainLight.shadow.camera.far = 25;
-    mainLight.shadow.camera.left = -15;
-    mainLight.shadow.camera.right = 15;
-    mainLight.shadow.camera.top = 15;
-    mainLight.shadow.camera.bottom = -5;
-    mainLight.shadow.bias = -0.0005;
-    scene.add(mainLight);
-
-    // Stadium fill light
-    const fillLight = new THREE.DirectionalLight(0x4a8fb8, 0.45);
-    fillLight.position.set(6, 8, -5);
-    scene.add(fillLight);
-
-    // Ground (grass)
-    const groundMaterial = new THREE.MeshStandardMaterial({
-      color: 0x0a4d1f,
-      roughness: 0.85,
-      metalness: 0.01,
-    });
-    const ground = new THREE.Mesh(new THREE.PlaneGeometry(50, 30), groundMaterial);
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    scene.add(ground);
-
-    // Stadium walls (subtle)
-    const stadiumMaterial = new THREE.MeshStandardMaterial({
-      color: 0x0a0f15,
-      roughness: 0.9,
-      metalness: 0.02,
-    });
-
-    const backWall = new THREE.Mesh(new THREE.BoxGeometry(50, 10, 2), stadiumMaterial);
-    backWall.position.set(0, 5, -15);
-    backWall.receiveShadow = true;
-    scene.add(backWall);
-
-    const sideWall1 = new THREE.Mesh(new THREE.BoxGeometry(2, 8, 30), stadiumMaterial);
-    sideWall1.position.set(-25, 4, 0);
-    sideWall1.receiveShadow = true;
-    scene.add(sideWall1);
-
-    const sideWall2 = sideWall1.clone();
-    sideWall2.position.set(25, 4, 0);
-    scene.add(sideWall2);
-
-    // Field lines (center and penalty)
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0xeeeeee,
-      transparent: true,
-      opacity: 0.25,
-      linewidth: 2,
-    });
-
-    const linePoints = [
-      [-12, 0.02, 0],
-      [12, 0.02, 0],
-      [0, 0.02, -8],
-      [0, 0.02, 8],
-      [-4, 0.02, -6],
-      [4, 0.02, -6],
-    ];
-
-    linePoints.forEach(([x, y, z]) => {
-      const length = Math.abs(x) > 5 ? 24 : 16;
-      const endPoint = new THREE.Vector3(
-        x + (x !== 0 ? 0 : 0),
-        y,
-        z + (z === 0 ? length : 0)
-      );
-      const geometry = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(x, y, z),
-        endPoint,
-      ]);
-      scene.add(new THREE.Line(geometry, lineMaterial));
-    });
-
-    // Create player using Neymar-inspired design
-    const player = createNeymarInspiredPlayer();
-    player.position.set(-3.0, 0, 0.8);
-    player.rotation.y = Math.PI / 6;
-    scene.add(player);
-
-    // Ball
-    const ballMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      roughness: 0.25,
-      metalness: 0.12,
-    });
-    const ball = new THREE.Mesh(new THREE.IcosahedronGeometry(0.33, 4), ballMaterial);
-    ball.castShadow = true;
-    ball.receiveShadow = true;
-    ball.position.set(-2.1, 0.33, 1.0);
-    scene.add(ball);
-
-    // Ball pattern (simple pentagon pattern)
-    const ballPatternMaterial = new THREE.MeshStandardMaterial({
-      color: 0x1a1a1a,
-      roughness: 0.35,
-    });
-    for (let i = 0; i < 3; i++) {
-      const patch = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), ballPatternMaterial);
-      const angle = (i * Math.PI * 2) / 3;
-      patch.position.copy(ball.position);
-      patch.position.x += Math.cos(angle) * 0.25;
-      patch.position.z += Math.sin(angle) * 0.25;
-      patch.scale.set(0.9, 0.9, 0.9);
-      scene.add(patch);
-    }
-
-    // Goal structure
-    const goalGroup = new THREE.Group();
-    const postMaterial = new THREE.MeshStandardMaterial({
-      color: 0xf5f5f5,
-      roughness: 0.15,
-      metalness: 0.35,
-    });
-
-    const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 2.4, 12), postMaterial);
-    pillar.position.set(4.8, 1.2, -0.95);
-    pillar.castShadow = true;
-    pillar.receiveShadow = true;
-    goalGroup.add(pillar);
-
-    const pillar2 = pillar.clone();
-    pillar2.position.set(4.8, 1.2, 0.95);
-    goalGroup.add(pillar2);
-
-    const crossbar = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.2, 12), postMaterial);
-    crossbar.rotation.z = Math.PI / 2;
-    crossbar.position.set(4.8, 2.4, 0);
-    crossbar.castShadow = true;
-    crossbar.receiveShadow = true;
-    goalGroup.add(crossbar);
-
-    // Goal net with more detail
-    const netGroup = new THREE.Group();
-    const netMaterial = new THREE.LineBasicMaterial({
-      color: 0xe8e8e8,
-      transparent: true,
-      opacity: 0.4,
-    });
-
-    for (let i = -5; i <= 5; i++) {
-      for (let j = 0; j < 3; j++) {
-        const geometry = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(4.7, 0.2 + i * 0.35, -1.0 + j * 1.0),
-          new THREE.Vector3(4.7, 0.2 + (i + 1) * 0.35, -1.0 + j * 1.0),
-        ]);
-        netGroup.add(new THREE.Line(geometry, netMaterial));
-
-        const vGeometry = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(4.7, 0.2 + i * 0.35, -1.0 + j * 1.0),
-          new THREE.Vector3(4.7, 0.2 + i * 0.35, -1.0 + (j + 1) * 1.0),
-        ]);
-        netGroup.add(new THREE.Line(vGeometry, netMaterial));
-      }
-    }
-
-    goalGroup.add(netGroup);
-    scene.add(goalGroup);
-
-    // Play crowd sound effect (optional - low volume)
-    const playCheerSound = () => {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-
-        const audioContext = new AudioContext();
-        const now = audioContext.currentTime;
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillator.frequency.setValueAtTime(400, now);
-        oscillator.frequency.exponentialRampToValueAtTime(300, now + 0.15);
-
-        gain.gain.setValueAtTime(0.02, now);
-        gain.gain.exponentialRampToValueAtTime(0, now + 0.15);
-
-        oscillator.start(now);
-        oscillator.stop(now + 0.15);
-      } catch (e) {
-        // Silent fail if audio context unavailable
-      }
-    };
-
-    // Animation timeline
-    const clock = new THREE.Clock();
-    const timelineDuration = 4.5;
-    let shouldStop = false;
-    let hasPlayed = false;
-
-    const finishAnimation = () => {
-      if (finishedRef.current) return;
-      finishedRef.current = true;
-      setFade(true);
-      setTimeout(() => {
-        onFinish();
-      }, 700);
-    };
-
-    const animate = () => {
-      if (shouldStop) return;
-
-      const elapsed = clock.getElapsedTime();
-      const t = Math.min(elapsed, timelineDuration);
-      const progress = t / timelineDuration;
-
-      // Phase 1: Dribbling approach (0-1.2s)
-      if (t < 1.2) {
-        const phase = t / 1.2;
-        player.position.x = -3.0 + phase * 1.8;
-        player.position.z = 0.8 + Math.sin(phase * Math.PI * 2) * 0.15;
-
-        const { leftArm, rightArm, leftLeg, rightLeg } = player.userData;
-        leftArm.rotation.z = -0.3 - Math.sin(phase * Math.PI * 3) * 0.25;
-        rightArm.rotation.z = 0.3 + Math.sin(phase * Math.PI * 3) * 0.28;
-        leftLeg.rotation.x = Math.sin(phase * Math.PI * 3) * 0.5;
-        rightLeg.rotation.x = Math.cos(phase * Math.PI * 3) * 0.5;
-
-        ball.position.x = -2.1 + phase * 0.85;
-        ball.rotation.x += phase * 0.15;
-      }
-      // Phase 2: Wind-up (1.2-1.55s)
-      else if (t < 1.55) {
-        const phase = (t - 1.2) / 0.35;
-        const { rightLeg } = player.userData;
-        rightLeg.rotation.x = -1.1 * phase;
-        player.userData.rightBoot.rotation.x = phase * 0.8;
-      }
-      // Phase 3: Kick (1.55-1.85s)
-      else if (t < 1.85) {
-        const phase = (t - 1.55) / 0.3;
-        if (phase > 0.1 && !hasPlayed) {
-          hasPlayed = true;
-          playCheerSound();
-        }
-
-        const kickPower = Math.sin(phase * Math.PI) * 1.2;
-        const { rightLeg } = player.userData;
-        rightLeg.rotation.x = -1.1 + kickPower * 1.2;
-
-        ball.position.x = -1.25 + phase * 0.6;
-        ball.position.y = 0.33 + Math.sin(phase * Math.PI) * 0.18;
-        ball.rotation.x += phase * 0.3;
-      }
-      // Phase 4: Ball flight (1.85-3.5s)
-      else if (t < 3.5) {
-        const flightPhase = (t - 1.85) / 1.65;
-        const ballTrajectory = Math.sin(Math.min(flightPhase, 0.75) * Math.PI) * 2.2;
-
-        ball.position.x = -0.65 + flightPhase * 5.3;
-        ball.position.y = 0.33 + ballTrajectory;
-        ball.position.z = 1.0 - flightPhase * 1.85;
-        ball.rotation.x += flightPhase * 0.4;
-        ball.rotation.z += flightPhase * 0.25;
-
-        // Camera follows ball cinematic
-        const targetCamPos = new THREE.Vector3(
-          -2 + flightPhase * 3.5,
-          2.0 + flightPhase * 0.8,
-          6.5 - flightPhase * 2.8
-        );
-        camera.position.lerp(targetCamPos, 0.08);
-        camera.lookAt(
-          ball.position.x + 0.5,
-          ball.position.y,
-          ball.position.z
-        );
-      }
-      // Phase 5: Goal hit and net reaction (3.5-4.5s)
-      else if (t < 4.5) {
-        const goalPhase = (t - 3.5) / 1.0;
-        ball.position.x = 4.85;
-        ball.position.y = 0.33 + Math.sin((1 - goalPhase) * Math.PI) * 1.5;
-        ball.position.z = 0.02;
-
-        if (goalPhase < 0.3) {
-          const bounce = Math.sin(goalPhase * Math.PI * 8) * 0.08;
-          netGroup.rotation.z = bounce * 0.15;
-          netGroup.position.x = bounce * 0.06;
-        }
-      }
-
-      renderer.render(scene, camera);
-
-      if (t >= timelineDuration) {
-        finishAnimation();
-        return;
-      }
-
-      requestAnimationFrame(animate);
-    };
-
     setLoaded(true);
     requestAnimationFrame(animate);
 
@@ -495,7 +549,7 @@ export default function IntroAnimation({ onFinish }) {
       shouldStop = true;
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
-      if (container && renderer.domElement.parentNode === container) {
+      if (container && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
     };
@@ -504,10 +558,11 @@ export default function IntroAnimation({ onFinish }) {
   const handleSkip = () => {
     if (finishedRef.current) return;
     finishedRef.current = true;
+    localStorage.setItem("intro_seen", "true");
     setFade(true);
     setTimeout(() => {
       onFinish();
-    }, 200);
+    }, 300);
   };
 
   return (
@@ -515,16 +570,13 @@ export default function IntroAnimation({ onFinish }) {
       <div className="intro-canvas" ref={containerRef} />
       <div className="intro-ui">
         <div className="intro-title">
-          <span className="intro-tag">⚽ Goal! Cinematic Kick-Off</span>
-          <h1>Welcome to TurfKhelo</h1>
-          <p>
-            Experience a premium 3D football animation before entering the
-            world of turfs, tournaments, and skillful plays.
-          </p>
+          <span className="intro-tag">🎬 Cinematic Football Moment</span>
+          <h1>Volley into Victory</h1>
+          <p>Watch a stunning chest-control volley followed by a net-shaking goal</p>
         </div>
-        {!loaded && <div className="intro-loading">Loading 3D animation...</div>}
+        {!loaded && <div className="intro-loading">Initializing 3D scene...</div>}
         <button type="button" className="intro-skip" onClick={handleSkip}>
-          Skip Animation →
+          Skip →
         </button>
       </div>
     </div>
