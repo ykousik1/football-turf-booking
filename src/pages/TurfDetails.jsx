@@ -21,6 +21,13 @@ export default function TurfDetails() {
   const [selectedSlot, setSelectedSlot] = useState("");
   const [date, setDate] = useState("");
   const [name, setName] = useState("");
+  const [confirmAdvance, setConfirmAdvance] = useState(false);
+
+  const advanceRate = 0.2;
+  const advanceAmount = useMemo(
+    () => Math.ceil(turf.price * advanceRate),
+    [turf.price]
+  );
 
   const handleBooking = () => {
     if (!name || !date || !selectedSlot) {
@@ -28,8 +35,13 @@ export default function TurfDetails() {
       return;
     }
 
-    const message = `Hi TurfKhelo team, I want to book ${turf.name} on ${date} at ${selectedSlot}. Name: ${name}`;
-    window.open(`https://wa.me/919999999999?text=${encodeURIComponent(message)}`, "_blank");
+    if (!confirmAdvance) {
+      alert("Please confirm advance payment to proceed with the booking.");
+      return;
+    }
+
+    const message = `Hi TurfKhelo team, I want to book ${turf.name} on ${date} at ${selectedSlot}. Name: ${name}. I agree to pay the advance amount of ₹${advanceAmount} to confirm this booking. Please share payment details.`;
+    window.open(`https://wa.me/916303480824?text=${encodeURIComponent(message)}`, "_blank");
   };
 
   if (!turf) {
@@ -127,6 +139,20 @@ export default function TurfDetails() {
                 className="mt-4 w-full rounded-3xl border border-white/10 bg-[#061016] px-4 py-3 text-white outline-none focus:border-green-400"
               />
 
+              <div className="mt-4 rounded-3xl bg-white/5 px-5 py-4">
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={confirmAdvance}
+                    onChange={(e) => setConfirmAdvance(e.target.checked)}
+                    className="mt-1 h-5 w-5 rounded border-white/20 bg-slate-900 text-green-500 focus:ring-green-400"
+                  />
+                  <span className="text-slate-300">
+                    I agree to pay the advance amount of <span className="font-semibold text-white">₹{advanceAmount}</span> to confirm this booking.
+                  </span>
+                </label>
+              </div>
+
               <button
                 type="button"
                 onClick={handleBooking}
@@ -148,10 +174,13 @@ export default function TurfDetails() {
                   <span className="font-semibold text-white">Price:</span> ₹{turf.price}/hr
                 </p>
                 <p>
+                  <span className="font-semibold text-white">Advance:</span> ₹{advanceAmount} (20% required)
+                </p>
+                <p>
                   <span className="font-semibold text-white">Location:</span> {turf.location}
                 </p>
                 <p>
-                  <span className="font-semibold text-white">Message:</span> Pre-filled message opens in WhatsApp.
+                  <span className="font-semibold text-white">Message:</span> Pre-filled booking message includes advance confirmation.
                 </p>
               </div>
             </div>
